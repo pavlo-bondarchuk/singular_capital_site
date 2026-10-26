@@ -1,28 +1,24 @@
-SINGULAR CAPITAL LLC — WEBSITE STARTER PACKAGE
+SINGULAR CAPITAL — WEBSITE
 
-Contents:
-- Responsive static HTML site pages
-- Legal draft pages: Terms, Privacy, Cookies, Disclaimer, Risk Disclosure
-- Shared stylesheet
+The site preserves the supplied page content and applies the supplied Luxury Real Estate Homepage design reference. Design inventory and review: docs/design-tokens.md and docs/design-audit.md.
 
-IMPORTANT BEFORE PUBLISHING:
-1. This is a local website implementation, not a deployed website.
-2. Have U.S. counsel review broker-dealer / securities, real estate brokerage, lending and transaction-based compensation issues in every relevant jurisdiction.
-3. Confirm the exact legal name and registered-agent details against Texas records. The address supplied by the client is presented as registered-agent/correspondence address, not as a company office.
-4. Add a real publication date, privacy request workflow, cookie consent if needed, and hosting/provider details.
-5. Remove any service language that does not reflect the actual activity or authorization held.
-6. The site currently has no analytics, third-party fonts or external image requests.
+LOCAL PREVIEW
+From the project folder, run:
+  php -S 127.0.0.1:8086
+Then open http://127.0.0.1:8086/ in a browser.
 
-Preview locally with: php -S 127.0.0.1:8086
-Open http://127.0.0.1:8086/ in a browser.
-Design tokens and reference interpretation: docs/design-tokens.md.
-Architectural photographs in assets/ are generated visual illustrations, not company listings.
+CONTACT FORM
+- Deploy on PHP 8.1+ with HTTPS. The contact form posts to contact.php and the fixed recipient is singular.atx@gmail.com.
+- Set CONTACT_FROM_EMAIL to a verified sender address authorized by the host's mail relay. The handler returns HTTP 503 when this value is missing or invalid; it never accepts sender or recipient addresses from the form.
+- Configure PHP's mail transport (sendmail_path or an authenticated SMTP relay), plus SPF/DKIM for the chosen sender domain.
+- PHP sessions must be enabled. The endpoint validates required fields and enquiry types, rejects malformed arrays and header injection, and uses a honeypot plus a one-minute per-session/per-IP throttle. The IP rate file stores a SHA-256 hash and timestamp outside the document root.
+- The default rate-limit folder is in the system temporary directory and scoped to this installation. Set CONTACT_RATE_DIR to a writable persistent directory outside the document root when multiple processes need shared limits. Separate hosts need a shared filesystem to share rate-limit records.
+- Update the Privacy and Cookie policies with the actual hosting and mail providers, retention periods and production configuration before launch.
+- Run tests/contact.sh to test with a local stub mail transport. It does not send a real email.
 
-CONTACT FORM SERVER SETUP:
-- Deploy the site on a PHP 8+ host with HTTPS. The contact page posts to contact.php.
-- Set CONTACT_FROM_EMAIL in the PHP server environment to a verified sender address authorized by the host's mail relay. The handler refuses delivery and returns HTTP 503 if the value is missing or invalid. Never populate it from request input.
-- Configure the host's PHP mail transport (sendmail_path or an authenticated SMTP relay). The fixed recipient is singular.atx@gmail.com; the validated visitor email is used only as Reply-To. Configure SPF/DKIM for the selected sender domain and ensure the relay authorizes it.
-- PHP sessions must be enabled. The endpoint validates required fields and enquiry types, rejects header injection and arrays, and includes a honeypot and a one-minute per-session/per-IP throttle. Per-IP records contain only a SHA-256 hash and timestamp, are stored in a directory outside the document root, and old records are pruned opportunistically after 24 hours.
-- The default rate-limit directory is a private subdirectory of the system temporary directory. Ensure PHP can create/write it, or set CONTACT_RATE_DIR to a writable persistent directory outside the document root. File locking coordinates processes sharing that directory; separate hosts/containers do not share limits unless configured to use shared storage.
-- Configure mailbox access and retention controls, then update the Privacy Policy with actual mail, hosting providers, and retention period before publication.
-- Run tests/contact.sh for local verification. It uses stub mail transports and never sends real email.
+ICONS AND FONTS
+- UI icons use the local Lucide SVG sprite at assets/icons/lucide.svg. Select and checkbox marks use locally stored SVG assets in assets/icons/. Their upstream source and license notices are in that folder.
+- Cormorant Garamond and Manrope fonts are self-hosted in assets/fonts/ with their SIL Open Font Licenses.
+- The supplied logo.svg remains the brand mark. No external icon, font or tracking requests are needed at runtime.
+
+The villa and property photographs in assets/ are generated illustrative imagery and do not represent company listings.

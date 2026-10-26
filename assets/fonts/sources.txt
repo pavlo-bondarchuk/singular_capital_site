@@ -1,0 +1,19 @@
+Self-hosted WOFF2 font files downloaded 2026-10-26 from Google Fonts.
+
+Cormorant Garamond Regular 400 (latin subset):
+https://fonts.gstatic.com/s/cormorantgaramond/v21/co3umX5slCNuHLi8bLeY9MK7whWMhyjypVO7abI26QOD_v86KnTOitk9IfqxUQ.woff2
+
+Cormorant Garamond Italic 400 (latin subset):
+https://fonts.gstatic.com/s/cormorantgaramond/v21/co3smX5slCNuHLi8bLeY9MK7whWMhyjYrGFEsdtdc62E6zd58jD-iNM8A_6pUKz9.woff2
+
+Manrope variable 400-600 (latin subset):
+https://fonts.gstatic.com/s/manrope/v20/xn7gYHE41ni1AdIRggexSvfedN4.woff2
+
+Google Fonts CSS API query used to identify the face URLs:
+https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Manrope:wght@400..600&display=swap
+
+Upstream families and SIL Open Font License 1.1 texts:
+https://github.com/google/fonts/tree/main/ofl/cormorantgaramond
+https://github.com/google/fonts/tree/main/ofl/manrope
+https://raw.githubusercontent.com/google/fonts/main/ofl/cormorantgaramond/OFL.txt
+https://raw.githubusercontent.com/google/fonts/main/ofl/manrope/OFL.txt

@@ -1,39 +1,44 @@
-# Singular Capital visual tokens
+# Singular Capital design tokens
 
-The tokens below are an implementation reading of `Singular Capital Luxury Real Estate Homepage-2.png`. Because the reference is a raster screenshot, typeface names and exact measurements cannot be recovered with certainty. Values are chosen to reproduce its proportions and atmosphere while fitting the supplied content.
+This system reads the supplied `Singular Capital Luxury Real Estate Homepage-2.png` as the visual source of truth. The screenshot does not reveal exact font files or source measurements; the values below are considered reproductions, checked against the provided real page content and responsive layouts.
 
-## Color
+## Brand palette
 
-| Token | Value | Use |
+| Token | Value | Role |
 | --- | --- | --- |
-| `--ink` | `#111211` | Page background and dark overlays |
-| `--surface` | `#181917` | Form controls and raised content |
-| `--paper` | `#e8e4dc` | Primary text and headings |
-| `--muted` | `#b3b0a9` | Paragraphs and secondary information |
-| `--accent` | `#c2a174` | Eyebrows, fine rules, links and actions |
-| `--line` | `rgba(194, 161, 116, .24)` | Warm gold section and card rules |
-| `--line-soft` | `rgba(232, 228, 220, .12)` | Subtle structural separators |
+| `--ink` | `#101211` | Main canvas and image overlay |
+| `--surface` | `#191b18` | Warm raised bands and contact panel |
+| `--surface-2` | `#20221e` | Nested surfaces |
+| `--ivory` | `#eeeae2` | Primary text and display type |
+| `--muted` | `#b8b9b1` | Supporting copy |
+| `--gold` | `#c5a57c` | Brand highlight, links and controls |
+| `--gold-line` | `rgba(197,165,124,.32)` | Warm section rules |
+| `--white-line` | `rgba(238,234,226,.14)` | Quiet dividers |
+
+Flat-color contrast ratios against the page canvas were calculated from the token values: ivory 15.67:1, muted 9.50:1, and gold 8.10:1. Image-backed text relies on the dark overlays; visual inspection does not replace testing against each possible photo crop.
 
 ## Type
 
-- Display: Georgia/Times New Roman, regular weight, tight tracking; 48–72px for the hero title, responsive to viewport.
-- Section headings: Georgia/Times New Roman, regular, 32–44px.
-- Body: Arial/Helvetica, 16px with 1.65 line height; muted warm gray.
-- Navigation and labels: Arial/Helvetica, uppercase, 9–11px, tracked around .11–.16em.
-- Eyebrows: uppercase gold, 11px, tracked .24em.
+- Display serif: self-hosted Cormorant Garamond, regular and italic, `--serif`; hero 56–92px, section titles 38–58px, card titles 24–30px.
+- Supporting sans: self-hosted Manrope variable, `--sans`; body 16px / 1.7, supporting paragraphs 13–17px / 1.6–1.8.
+- Eyebrows: Manrope 10px, 600 weight, uppercase, `.24em` tracking.
+- Navigation: Manrope 11px, 500 weight, uppercase, `.17em` tracking, 44px minimum height.
+- Inputs and primary controls: at least 48px high.
 
-The screenshot uses a high-contrast editorial serif and a restrained sans serif. Georgia and Arial provide local system fallbacks without introducing external font requests.
+Cormorant Garamond and Manrope are self-hosted with their SIL Open Font Licenses. The site makes no runtime font requests. UI glyphs use the local Lucide SVG sprite; select and checked-box marks use local Lucide SVG assets with license notices under `assets/icons/`. The supplied `logo.svg` remains the brand mark.
 
-## Layout and rhythm
+## Composition and spacing
 
-- Desktop page gutters: 5.5vw, clamped between 22px and 92px.
-- Main content width: 1440px; long legal copy width: 920px, paragraphs up to 790px.
-- Header: about 100px desktop, with wordmark and logo separated visually by a gold hairline.
-- Hero: up to 660px / 75vh, full-bleed image with a dark left-to-right overlay for legibility. The image atlas is scaled proportionally and cropped vertically in each card.
-- Section spacing: 66–112px, responsive (hero uses 160px top padding on desktop); fine rules separate major bands.
-- Service cards: six equal columns on wide screens, with cropped architectural photo panels and thin gold rules; collapses to two and then one column on smaller screens.
-- Mobile: two-column card grid through 760px, single column through 480px; header and navigation wrap cleanly; nav links retain a 36px minimum touch area.
+- Main content: 1440px maximum. Gutters: `clamp(20px, 5.5vw, 96px)`.
+- Header: 104px desktop, 78px compact; on the home hero it sits over a fine translucent rule and dark image wash.
+- Hero: `min(680px, 82svh)` desktop and up to `94svh` on mobile (`88svh` on very narrow screens); the text block is limited to 760px.
+- Home services: explanatory column around 235–280px with an adjacent horizontally scrollable photo gallery; snap points preserve one complete card at a time.
+- Editorial home sections alternate an image/text split and a two-column mandate passage instead of repeating boxed cards.
+- Cards: 212–252px wide, image-led; the six local atlas panels are scaled proportionally and cropped vertically.
+- Long-form copy: 790px reading column; privacy/legal pages gain a compact table of contents on wide layouts.
+- Mobile menu button and navigation links retain 44px minimum touch height. Service gallery scrolls with touch and keyboard focus; previous/next controls appear when JavaScript runs.
+- Motion respects `prefers-reduced-motion`.
 
-## Image direction
+## Asset direction
 
-The reference pairs dark architecture at dusk with warm interior lighting, cool water and an unobstructed darker area behind the headline. `assets/hero.jpg` is intended to follow that composition. The property scene is visual ambience, not a factual claim about a Singular Capital listing or project.
+`assets/hero.jpg` and `assets/services.jpg` are locally stored generated architectural visuals guided by the reference composition. They provide atmosphere and do not represent a Singular Capital property, listing or completed transaction. `logo.svg` is the supplied brand mark.

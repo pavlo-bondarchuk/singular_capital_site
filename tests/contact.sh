@@ -54,17 +54,21 @@ assert_code() {
   fi
 }
 valid_post() {
-  curl -sS -H "Origin: http://127.0.0.1:$PORT" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message=Hello&privacy_ack=on' "$1/contact.php"
+  curl -sS -H "Origin: $ORIGIN" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message=Hello&privacy_ack=on' "$1/contact.php"
 }
 
 start_server "$PORT" "$TMP/rate-one" "$TMP/sendmail-ok"
-BASE="http://127.0.0.1:$PORT"
+ORIGIN="http://127.0.0.1:$PORT"
+BASE="$ORIGIN"
+# Confirm the PHP session cookie is limited to the endpoint directory.
+curl -sS -D "$TMP/cookie-headers" -o /dev/null "$BASE/contact.php"
+grep -qi "^Set-Cookie: singular_contact=.*path=/;" "$TMP/cookie-headers"
 # Same host and non-default port are accepted.
-assert_code 200 -H "Origin: $BASE" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message=Hello&privacy_ack=on' "$BASE/contact.php"
+assert_code 200 -H "Origin: $ORIGIN" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message=Hello&privacy_ack=on' "$BASE/contact.php"
 grep -q '^To: singular.atx@gmail.com' "$TMP/mail-$PORT.txt"
 grep -q '^From: Singular Capital Website <website@example.test>' "$TMP/mail-$PORT.txt"
 # A second submission from the same IP is rate limited even with a fresh cookie jar.
-assert_code 429 -H "Origin: $BASE" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message=Hello&privacy_ack=on' "$BASE/contact.php"
+assert_code 429 -H "Origin: $ORIGIN" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message=Hello&privacy_ack=on' "$BASE/contact.php"
 stop_server
 
 # Isolated bucket: bad origins and malformed fields fail before mail delivery.
@@ -72,30 +76,30 @@ start_server "$PORT" "$TMP/rate-two" "$TMP/sendmail-ok"
 assert_code 400 -H 'Origin: https://attacker.example' -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message=Hello&privacy_ack=on' "$BASE/contact.php"
 stop_server
 start_server "$PORT" "$TMP/rate-three-a" "$TMP/sendmail-ok"
-assert_code 400 -H "Origin: $BASE" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message[]=Hello&privacy_ack=on' "$BASE/contact.php"
+assert_code 400 -H "Origin: $ORIGIN" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message[]=Hello&privacy_ack=on' "$BASE/contact.php"
 stop_server
 start_server "$PORT" "$TMP/rate-three-b" "$TMP/sendmail-ok"
-assert_code 400 -H "Origin: $BASE" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message=Hello&privacy_ack[]=on' "$BASE/contact.php"
+assert_code 400 -H "Origin: $ORIGIN" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message=Hello&privacy_ack[]=on' "$BASE/contact.php"
 stop_server
 start_server "$PORT" "$TMP/rate-three-c" "$TMP/sendmail-ok"
-assert_code 400 -H "Origin: $BASE" -d 'name=Taylor&country=US&email=bad&enquiry=Other&message=Hello&privacy_ack=on' "$BASE/contact.php"
+assert_code 400 -H "Origin: $ORIGIN" -d 'name=Taylor&country=US&email=bad&enquiry=Other&message=Hello&privacy_ack=on' "$BASE/contact.php"
 stop_server
 
 # Honeypot succeeds silently and never invokes mail.
 rm -f "$TMP/mail-$PORT.txt"
 start_server "$PORT" "$TMP/rate-four" "$TMP/sendmail-ok"
-assert_code 200 -H "Origin: $BASE" -d 'website=bot' "$BASE/contact.php"
+assert_code 200 -H "Origin: $ORIGIN" -d 'website=bot' "$BASE/contact.php"
 [ ! -f "$TMP/mail-$PORT.txt" ]
 stop_server
 
 # Missing sender configuration and mail transport failure both produce a safe 503.
 start_server "$PORT" "$TMP/rate-five" "$TMP/sendmail-ok" -
-assert_code 503 -H "Origin: $BASE" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message=Hello&privacy_ack=on' "$BASE/contact.php"
+assert_code 503 -H "Origin: $ORIGIN" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message=Hello&privacy_ack=on' "$BASE/contact.php"
 grep -q 'mailto:singular.atx@gmail.com' "$TMP/response"
 grep -q 'logo.svg' "$TMP/response"
 stop_server
 start_server "$PORT" "$TMP/rate-six" "$TMP/sendmail-fail"
-assert_code 503 -H "Origin: $BASE" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message=Hello&privacy_ack=on' "$BASE/contact.php"
+assert_code 503 -H "Origin: $ORIGIN" -d 'name=Taylor&country=US&email=taylor%40example.com&enquiry=Other&message=Hello&privacy_ack=on' "$BASE/contact.php"
 grep -q 'aria-current="page"' "$TMP/response"
 stop_server
 

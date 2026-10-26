@@ -6,9 +6,11 @@ const CONTACT_RECIPIENT = 'singular.atx@gmail.com';
 const CONTACT_SUBJECT = 'Website enquiry — Singular Capital';
 
 session_name('singular_contact');
+$cookieDirectory = trim(dirname((string) (parse_url((string) ($_SERVER['SCRIPT_NAME'] ?? '/contact.php'), PHP_URL_PATH) ?: '/contact.php')), '/');
+$cookiePath = $cookieDirectory === '' ? '/' : '/' . $cookieDirectory . '/';
 session_set_cookie_params([
     'lifetime' => 0,
-    'path' => '/',
+    'path' => $cookiePath,
     'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
     'httponly' => true,
     'samesite' => 'Lax',
@@ -26,7 +28,7 @@ function respond(string $title, string $message, int $status = 200, bool $emailF
     $safeMessage = htmlspecialchars($message, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $emailFallback = $emailFallback || $status === 503;
     $fallback = $emailFallback ? '<p>Or email us at <a href="mailto:singular.atx@gmail.com">singular.atx@gmail.com</a>.</p>' : '';
-    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>' . $safeTitle . ' | Singular Capital</title><link rel="stylesheet" href="assets/style.css"></head><body><header><a class="brand" href="index.html" aria-label="Singular Capital home"><img src="logo.svg" alt="" width="54" height="54"><span class="brand-name">SINGULAR<small>CAPITAL</small></span></a><nav><a href="about.html">About</a><a href="services.html">What We Do</a><a href="how-we-work.html">How We Work</a><a href="contact.html" aria-current="page">Contact</a></nav></header><main class="legal"><div class="eyebrow">Contact</div><h1>' . $safeTitle . '</h1><p class="lead" role="status" aria-live="polite">' . $safeMessage . '</p>' . $fallback . '<a class="btn primary" href="contact.html">Return to contact form</a></main></body></html>';
+    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101211"><title>' . $safeTitle . ' | Singular Capital</title><link rel="stylesheet" href="assets/style.css"><script src="assets/site.js" defer></script></head><body class="page-contact"><a class="skip-link" href="#main-content">Skip to content</a><header class="site-header"><a class="brand" href="index.html" aria-label="Singular Capital home"><img src="logo.svg" alt="" width="60" height="54"><span class="brand-name">SINGULAR<small>CAPITAL</small></span></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu <span aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="assets/icons/lucide.svg#menu"></use></svg></span></button><nav class="site-nav" id="site-nav" aria-label="Main navigation"><a href="about.html">About</a><a href="services.html">Services</a><a href="how-we-work.html">Our Approach</a><a href="contact.html" aria-current="page">Contact</a></nav></header><main id="main-content" class="page-shell"><section class="page-intro"><div class="eyebrow">Contact</div><h1>' . $safeTitle . '</h1><p class="lead" role="status" aria-live="polite">' . $safeMessage . '</p>' . $fallback . '<a class="button button--gold" href="contact.html">Return to contact form</a></section></main></body></html>';
     exit;
 }
 
@@ -64,7 +66,7 @@ if ($sourceUrl !== '') {
 }
 
 // Per-IP throttle uses only a one-way IP hash and a timestamp, stored outside the document root.
-$rateDir = getenv('CONTACT_RATE_DIR') ?: (sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'singular-capital-contact-rate');
+$rateDir = getenv('CONTACT_RATE_DIR') ?: (sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'singular-capital-contact-rate-' . hash('sha256', __DIR__));
 $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
 if (!is_dir($rateDir) && !@mkdir($rateDir, 0700, true) && !is_dir($rateDir)) {
     error_log('Singular Capital contact form: rate-limit directory unavailable.');
