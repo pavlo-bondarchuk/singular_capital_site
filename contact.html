@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact | Singular Capital</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header><a class="brand" href="index.html" aria-label="Singular Capital home"><img src="logo.svg" alt="" width="54" height="54"><span class="brand-name">SINGULAR<small>CAPITAL</small></span></a><nav><a href="about.html">About</a><a href="services.html">What We Do</a><a href="how-we-work.html">How We Work</a><a href="contact.html" aria-current="page">Contact</a></nav></header>
+<main class="legal">
+  <div class="eyebrow">Contact</div>
+  <h1>Start a conversation.</h1>
+  <p class="lead">Tell us briefly about your objective or proposal. We will review the information and determine whether a discussion may be appropriate.</p>
+  <form action="contact.php" method="post">
+    <label>Full name *<input name="name" autocomplete="name" maxlength="120" required></label>
+    <label>Company (optional)<input name="company" autocomplete="organization" maxlength="160"></label>
+    <label>Country / region *<input name="country" autocomplete="country-name" maxlength="120" required></label>
+    <label>Email address *<input type="email" name="email" autocomplete="email" maxlength="254" required></label>
+    <label>Type of enquiry *<select name="enquiry" required><option value="">Please select</option><option>Property acquisition</option><option>Property / project proposal</option><option>Project financing enquiry</option><option>Capital or financing introduction</option><option>Professional partnership</option><option>Other</option></select></label>
+    <label>Indicative budget or project size (optional)<input name="budget" maxlength="120"></label>
+    <label>How can we help? *<textarea name="message" maxlength="4000" required></textarea></label>
+    <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden"><label>Leave this field empty<input name="website" tabindex="-1" autocomplete="off"></label></div>
+    <label><input type="checkbox" name="privacy_ack" required style="width:auto"> I have read the <a href="legal/privacy.html">Privacy Policy</a> and understand that my information will be used to respond to this enquiry. *</label>
+    <button class="btn primary" type="submit">Submit enquiry</button>
+    <small>Do not include bank details, identity documents or other sensitive information in this form.</small>
+  </form>
+  <p class="muted">Correspondence address: 5900 Balcones Dr, Suite 100, Austin, TX 78731, USA. This is the registered-agent / correspondence address and is not represented as a company office.</p>
+</main>
+<footer><div>© Singular Capital LLC</div><div><a href="legal/terms.html">Terms</a> · <a href="legal/privacy.html">Privacy</a> · <a href="legal/cookies.html">Cookies</a> · <a href="legal/disclaimer.html">Disclaimer</a></div><div>Registered agent / correspondence address: 5900 Balcones Dr, Suite 100, Austin, TX 78731, USA</div></footer>
+</body>
+</html>
