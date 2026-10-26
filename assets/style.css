@@ -55,3 +55,12 @@ h1,h2,h3{margin-top:0;font-family:var(--serif);font-weight:400;text-wrap:balance
 
 .site-footer__links{flex-wrap:wrap}
 @media(max-width:760px){.hero:has(.menu-toggle[hidden]){display:block}.hero:has(.menu-toggle[hidden]) .site-header--overlay{position:relative;inset:auto}}
+
+/* Contextual service photography and a same-format Our Approach variation. */
+.architectural-image--process{background:url('approach.jpg') center 50%/cover no-repeat,#23241f}
+.page-services .architectural-image{background-image:url('services.jpg');background-position:var(--service-panel,0%) 50%;background-size:600% auto;transition:opacity .24s ease}
+.page-services .page-aside[data-photo-changing="true"] .architectural-image{opacity:.62}
+.service-detail{scroll-margin-top:28px}
+/* Progressive heading reveal; without JS, all existing headings stay visible. */
+@media(prefers-reduced-motion:no-preference){.scroll-reveal{opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease}.scroll-reveal.is-revealed{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.page-services .architectural-image,.scroll-reveal{transition:none!important;transform:none!important;opacity:1!important}}
